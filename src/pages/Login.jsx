@@ -1,11 +1,14 @@
 import { useState } from "react";
 import { Form, Button, Container, Card, Row, Col } from "react-bootstrap";
+import { useNavigate } from "react-router";
 
 const LoginPage = () => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
+	const [error, setError] = useState(null);
+	const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData({
@@ -14,16 +17,31 @@ const LoginPage = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle login logic here
+    try {
+			const response = await fetch("https://offers-api.digistos.com/api/auth/login", {
+				method: "POST",
+				headers:{ "Content-Type":"application/json", },
+				body:JSON.stringify(formData),
+			});
+			if (!response.ok){
+				throw {
+					status: response.status,
+					message: data.message
+				};
+			}
+			navigate("/offres/professionnelles");
+		} catch (err) {
+			console.error(err);
+			setError("Une erreur est survenue lors du login, Réessayez un jour :p");
+		}
+	};
     // Don't forget to handle errors, both for yourself (dev) and for the client (via a Bootstrap Alert):
     //   - Show an error if credentials are invalid
     //   - Show a generic error for all other cases
     // On success, redirect to the Pro Offers page
     console.log("Login submitted:", formData);
-  };
-
   return (
     <Container className="d-flex justify-content-center align-items-center min-vh-100">
       <Row className="w-100 justify-content-center">
