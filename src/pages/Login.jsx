@@ -33,8 +33,11 @@ const LoginPage = () => {
 		}
 
 		const data = await response.json();
-		localStorage.setItem("token", data.token);
-		localStorage.setItem("tokenExpiration",data.expiration);
+		const auth = {
+			token:data.access_token,
+			expiration:data.expires_in,
+		}
+		localStorage.setItem("auth", JSON.stringify(auth));
 		
 		navigate("/offres/professionnelles");
 		} catch (err) {

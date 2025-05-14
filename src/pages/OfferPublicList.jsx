@@ -19,12 +19,12 @@ const OfferPublicList = () => {
           }
         );
 
-        const data = await response.json();
+        const {data: offers, message} = await response.json();
         if (!response.ok) {
-          throw { status: response.status, message: data.message };
+          throw { status: response.status, message: message };
         }
 
-        setOffers(data);
+        setOffers(offers);
       } catch (err) {
         setError("Une erreur est survenue lors du chargement des offres.");
         console.error(err.message || err);
