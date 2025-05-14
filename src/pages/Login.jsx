@@ -33,6 +33,7 @@ const LoginPage = () => {
 	}
 	navigate("/offres/professionnelles");
 	} catch (err) {
+		console.error(err);
 		if (err.status ===  401){
 			setError("Identifiants invalides. boowamp");
 		} else {
