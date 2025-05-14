@@ -22,7 +22,7 @@ const LoginPage = () => {
     try {
 	const response = await fetch("https://offers-api.digistos.com/api/auth/login", {
 		method: "POST",
-		headers:{ "Content-Type":"application/json", },
+		headers:{ "Content-Type":"application/json", "Accept": "application/json",},
 		body:JSON.stringify(formData),
 	});
 	if (!response.ok){
@@ -33,8 +33,11 @@ const LoginPage = () => {
 	}
 	navigate("/offres/professionnelles");
 	} catch (err) {
-		console.error(err);
-		setError("Une erreur est survenue lors du login, Réessayez un jour :p");
+		if (err.status ===  401){
+			setError("Identifiants invalides. boowamp");
+		} else {
+			setError("Erreur de connexion jsp ptdr force");
+		}
 	}
 };
     // Don't forget to handle errors, both for yourself (dev) and for the client (via a Bootstrap Alert):
