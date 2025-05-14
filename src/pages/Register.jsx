@@ -20,7 +20,6 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(null);
 
     try {
         const response = await fetch("https://offers-api.digistos.com/api/auth/register", {
@@ -32,10 +31,13 @@ const Register = () => {
       });
 
       if (!response.ok) {
-        throw new Error("Erreur lors de l'inscription");
+        throw { 
+		status: response.status, 
+		message: data.message 
+	};
       }
 
-      navigate("/login");
+      navigate("/connexion");
     } catch (err) {
       console.error(err);
       setError("Une erreur est survenue lors de l'inscription. Veuillez réessayer plus tard.");
