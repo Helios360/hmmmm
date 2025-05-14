@@ -9,7 +9,6 @@ const Register = () => {
     password: "",
   });
   const [error, setError] = useState(null);
-  const [success, setSuccess] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -22,10 +21,9 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
-    setSuccess(false);
 
     try {
-      const response = await fetch("https://offers-api.digistos.com/api/auth/register", {
+        const response = await fetch("https://offers-api.digistos.com/api/auth/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -34,15 +32,13 @@ const Register = () => {
       });
 
       if (!response.ok) {
-        throw new Error(`Erreur lors de l'inscription ${response.status} ${response.statusText}`);
+        throw new Error("Erreur lors de l'inscription");
       }
 
-      setSuccess(true);
-      setTimeout(() => {
-        navigate("/login");
-      }, 2000);
+      navigate("/login");
     } catch (err) {
-      setError(err.message);
+      console.error(err);
+      setError("Une erreur est survenue lors de l'inscription. Veuillez réessayer plus tard.");
     }
   };
 
@@ -53,7 +49,6 @@ const Register = () => {
           <Card className="p-4 shadow-lg">
             <h2 className="text-center mb-4">Créer un compte</h2>
             {error && <Alert variant="danger">{error}</Alert>}
-            {success && <Alert variant="success">Inscription réussie! Redirection vers la page de connexion...</Alert>}
             <Form onSubmit={handleSubmit}>
               <Form.Group className="mb-3" controlId="formEmail">
                 <Form.Label>Email</Form.Label>
