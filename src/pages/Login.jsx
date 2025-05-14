@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Form, Button, Container, Card, Row, Col } from "react-bootstrap";
 import { useNavigate } from "react-router";
 
-const LoginPage = () => {
+const LoginPage = () => {	
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -20,23 +20,23 @@ const LoginPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-			const response = await fetch("https://offers-api.digistos.com/api/auth/login", {
-				method: "POST",
-				headers:{ "Content-Type":"application/json", },
-				body:JSON.stringify(formData),
-			});
-			if (!response.ok){
-				throw {
-					status: response.status,
-					message: data.message
-				};
-			}
-			navigate("/offres/professionnelles");
-		} catch (err) {
-			console.error(err);
-			setError("Une erreur est survenue lors du login, Réessayez un jour :p");
-		}
-	};
+	const response = await fetch("https://offers-api.digistos.com/api/auth/login", {
+		method: "POST",
+		headers:{ "Content-Type":"application/json", },
+		body:JSON.stringify(formData),
+	});
+	if (!response.ok){
+		throw {
+			status: response.status,
+			message: data.message
+		};
+	}
+	navigate("/offres/professionnelles");
+	} catch (err) {
+		console.error(err);
+		setError("Une erreur est survenue lors du login, Réessayez un jour :p");
+	}
+};
     // Don't forget to handle errors, both for yourself (dev) and for the client (via a Bootstrap Alert):
     //   - Show an error if credentials are invalid
     //   - Show a generic error for all other cases
