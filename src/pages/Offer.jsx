@@ -12,6 +12,9 @@ const Offer = () => {
     const fetchOffer = async () => {
       try {
 	const auth = JSON.parse(localStorage.getItem("auth"));
+	if (!auth || !auth.token) {
+          throw new Error("Token non trouvé");
+        }
         const response = await fetch(
           `https://offers-api.digistos.com/api/offers/${id}`,
           {

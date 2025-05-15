@@ -3,11 +3,16 @@ import { useNavigate } from 'react-router';
 
 const Logout = () => {
    const navigate = useNavigate();
+   const { checkAuth } = useOutletContext();
+
    useEffect(() => {
     const handleLogout = async () => {
       // (1) Appel API pour notifier la déconnexion
 	try{
 		const auth = JSON.parse(localStorage.getItem("auth"));
+		if (!auth || !auth.token) {
+			throw new Error("Token non trouvé");
+		}
 		const response = await fetch("https://offers-api.digistos.com/api/auth/logout",{
 			method:"POST",
 			headers:{
@@ -19,6 +24,7 @@ const Logout = () => {
 			throw new Error("Erreur lors de la déco");
 		}
 		localStorage.removeItem("auth");
+		checkAuth();
 		window.dispatchEvent(new Event("authChange"));
 		navigate("/connexion");
 	} catch (err) {
