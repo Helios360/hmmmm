@@ -7,10 +7,14 @@ function Header() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
-    const auth = JSON.parse(localStorage.getItem('auth'));
+    const checkAuth = () => {
+	  const auth = JSON.parse(localStorage.getItem('auth'));
     setIsAuthenticated(!!auth?.token);
-  }, []);
-
+  };
+  checkAuth();
+window.addEventListener("authChange",checkAuth);
+	return () => window.removeEventListener("authChange",checkAuth);
+},[]);
   return (
     <Navbar bg="light" data-bs-theme="light">
       <Container>

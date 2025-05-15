@@ -19,6 +19,7 @@ const Logout = () => {
 			throw new Error("Erreur lors de la déco");
 		}
 		localStorage.removeItem("auth");
+		window.dispatchEvent(new Event("authChange"));
 		navigate("/connexion");
 	} catch (err) {
 		console.error(err);
