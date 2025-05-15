@@ -16,7 +16,7 @@ const Offer = () => {
           {
             headers: {
               Accept: "application/json",
-              // Add Authorization token
+		    // Add Authorization token
             },
           }
         );

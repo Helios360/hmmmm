@@ -18,13 +18,11 @@ const Logout = () => {
 		if(!response.ok){
 			throw new Error("Erreur lors de la déco");
 		}
+		localStorage.removeItem("auth");
+		navigate("/connexion");
 	} catch (err) {
 		console.error(err);
 	}
-      // (2) Suppression du token côté frontend
-	localStorage.removeItem("auth");
-      // (3) Redirection vers la page de login
-    	navigate("/connexion");
     };
 
     handleLogout();

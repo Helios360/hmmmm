@@ -10,6 +10,7 @@ const OfferProList = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
+	//console.log(localStorage.getItem(bonjour));
   	const auth = JSON.parse(localStorage.getItem("auth"));
 	if (!auth || !auth.token) {
           throw new Error("Token non trouvé");

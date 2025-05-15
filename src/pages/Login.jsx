@@ -34,10 +34,10 @@ const LoginPage = () => {
 		}
 		const auth = {
 			token:data.access_token,
-			expiresAt:data.expires_in,
+			expiresAt:new Date().getTime() + data.expires_in * 1000,
 		}
 		localStorage.setItem("auth", JSON.stringify(auth));
-		console.log(localStorage);	
+	    	console.log(localStorage);	
 		navigate("/offres/professionnelles");
 		} catch (err) {
 			console.error(err);
