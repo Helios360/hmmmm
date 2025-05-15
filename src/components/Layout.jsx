@@ -8,21 +8,18 @@ const Layout = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   const checkAuth = () => {
-    const auth = JSON.parse(localStorage.getItem("auth"));
-    setIsAuthenticated(!!auth?.token && new Date(auth.expiresAt) > new Date());
+    const auth = JSON.parse(localStorage.getItem("auth") || "{}");
+    const isValid = !!auth?.token && new Date(auth.expiresAt) > new Date();
+    setIsAuthenticated(isValid);
+    return isValid;
   };
 
   useEffect(() => {
     checkAuth();
-    
-    const handleAuthChange = () => {
-      checkAuth();
-    };
-    
-    window.addEventListener("authChange", handleAuthChange);
-    
+    const interval = setInterval(checkAuth, 1000);
+
     return () => {
-      window.removeEventListener("authChange", handleAuthChange);
+      clearInterval(interval);
     };
   }, []);
 
