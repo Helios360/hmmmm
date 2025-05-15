@@ -6,7 +6,6 @@ const Logout = () => {
   
   useEffect(() => {
     const handleLogout = async () => {
-      // (1) Appel API pour notifier la déconnexion
       try {
         const auth = JSON.parse(localStorage.getItem("auth"));
         if (!auth || !auth.token) {
@@ -22,13 +21,12 @@ const Logout = () => {
         });
         
         if (!response.ok) {
-          throw new Error("Erreur lors de la déco");
+          throw new Error("Erreur lors de la déconnexion");
         }
-        
-        localStorage.removeItem("auth");
-        navigate("/connexion");
       } catch (err) {
         console.error(err);
+      } finally {
+        localStorage.removeItem("auth");
         navigate("/connexion");
       }
     };

@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { Form, Button, Container, Card, Row, Col } from "react-bootstrap";
-import { useNavigate, useOutletContext } from "react-router";
+import { Form, Button, Container, Card, Row, Col, Alert } from "react-bootstrap";
+import { useNavigate } from "react-router";
 
-const LoginPage = () => {	
+const Login = () => {	
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -16,44 +16,44 @@ const LoginPage = () => {
       [e.target.name]: e.target.value,
     });
   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const response = await fetch("https://offers-api.digistos.com/api/auth/login", {
-      method: "POST",
-      headers:{ "Content-Type":"application/json", "Accept": "application/json",},
-      body:JSON.stringify(formData),
-	    });
-    const data = await response.json();
-    if (!response.ok){
-      throw {
-        status: response.status,
-        message: data.message
+        method: "POST",
+        headers: { 
+          "Content-Type": "application/json", 
+          "Accept": "application/json"
+        },
+        body: JSON.stringify(formData),
+      });
+      
+      const data = await response.json();
+      
+      if (!response.ok) {
+        throw {
+          status: response.status,
+          message: data.message
+        };
+      }
+      
+      const auth = {
+        token: data.access_token,
+        expiresAt: new Date().getTime() + data.expires_in * 1000,
       };
-    }
-    const auth = {
-      token:data.access_token,
-      expiresAt:new Date().getTime() + data.expires_in * 1000,
-    }
-    localStorage.setItem("auth", JSON.stringify(auth));
-    console.log(localStorage);
-    navigate("/offres/professionnelles");
+      
+      localStorage.setItem("auth", JSON.stringify(auth));
+      navigate("/offres/professionnelles");
     } catch (err) {
       console.error(err);
-      if (err.status ===  401){
-        setError("Identifiants invalides. boowamp");
+      if (err.status === 401) {
+        setError("Identifiants invalides");
       } else {
-        setError("Erreur de connexion jsp ptdr force");
+        setError("Une erreur est survenue lors de la connexion");
       }
     }
- 	  console.log(formData);	   
   };
-
-	
-    // Don't forget to handle errors, both for yourself (dev) and for the client (via a Bootstrap Alert):
-    //   - Show an error if credentials are invalid
-    //   - Show a generic error for all other cases
-    // On success, redirect to the Pro Offers page
     
   return (
     <Container className="d-flex justify-content-center align-items-center min-vh-100">
@@ -61,6 +61,11 @@ const LoginPage = () => {
         <Col xs={12} sm={8} md={6} lg={4}>
           <Card className="p-4 shadow-lg">
             <h2 className="text-center mb-4">Se connecter</h2>
+            
+            {error && (
+              <Alert variant="danger">{error}</Alert>
+            )}
+            
             <Form onSubmit={handleSubmit}>
               <Form.Group className="mb-3" controlId="loginEmail">
                 <Form.Label>Email</Form.Label>
@@ -94,5 +99,4 @@ const LoginPage = () => {
     </Container>
   );
 };
-
-export default LoginPage;
+export default Login;
