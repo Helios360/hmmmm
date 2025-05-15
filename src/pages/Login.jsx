@@ -16,40 +16,38 @@ const LoginPage = () => {
       [e.target.name]: e.target.value,
     });
   };
-  const {checkAuth}=useOutletContext();
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-		const response = await fetch("https://offers-api.digistos.com/api/auth/login", {
-		method: "POST",
-		headers:{ "Content-Type":"application/json", "Accept": "application/json",},
-		body:JSON.stringify(formData),
-	});
-	const data = await response.json();
-	if (!response.ok){
-		throw {
-			status: response.status,
-			message: data.message
-		};
-	}
-	const auth = {
-		token:data.access_token,
-		expiresAt:new Date().getTime() + data.expires_in * 1000,
-	}
-	localStorage.setItem("auth", JSON.stringify(auth));
-	checkAuth();
-  console.log(localStorage);
-	navigate("/offres/professionnelles");
-	} catch (err) {
-		console.error(err);
-		if (err.status ===  401){
-			setError("Identifiants invalides. boowamp");
-		} else {
-			setError("Erreur de connexion jsp ptdr force");
-		}
-	}
- 	console.log(formData);	   
-   };
+      const response = await fetch("https://offers-api.digistos.com/api/auth/login", {
+      method: "POST",
+      headers:{ "Content-Type":"application/json", "Accept": "application/json",},
+      body:JSON.stringify(formData),
+	    });
+    const data = await response.json();
+    if (!response.ok){
+      throw {
+        status: response.status,
+        message: data.message
+      };
+    }
+    const auth = {
+      token:data.access_token,
+      expiresAt:new Date().getTime() + data.expires_in * 1000,
+    }
+    localStorage.setItem("auth", JSON.stringify(auth));
+    console.log(localStorage);
+    navigate("/offres/professionnelles");
+    } catch (err) {
+      console.error(err);
+      if (err.status ===  401){
+        setError("Identifiants invalides. boowamp");
+      } else {
+        setError("Erreur de connexion jsp ptdr force");
+      }
+    }
+ 	  console.log(formData);	   
+  };
 
 	
     // Don't forget to handle errors, both for yourself (dev) and for the client (via a Bootstrap Alert):
