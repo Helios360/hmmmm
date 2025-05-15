@@ -6,16 +6,20 @@ const OfferProList = () => {
   const [offers, setOffers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
+  
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch(
+  	const auth = JSON.parse(localStorage.getItem("auth"));
+	if (!auth || !auth.token) {
+          throw new Error("Token non trouvé");
+        }
+	const response = await fetch(
           "https://offers-api.digistos.com/api/offers/pro",
           {
             headers: {
               Accept: "application/json",
-              Authorization: `Bearer ${JSON.parse(localStorage.getItem("auth"))?.token}`
+      	      Authorization: `Bearer ${auth.token}`
             },
           }
         );

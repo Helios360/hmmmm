@@ -25,20 +25,19 @@ const LoginPage = () => {
 			headers:{ "Content-Type":"application/json", "Accept": "application/json",},
 			body:JSON.stringify(formData),
 		});
+		const data = await response.json();
 		if (!response.ok){
 			throw {
 				status: response.status,
 				message: data.message
 			};
 		}
-
-		const data = await response.json();
 		const auth = {
 			token:data.access_token,
-			expiration:data.expires_in,
+			expiresAt:data.expires_in,
 		}
 		localStorage.setItem("auth", JSON.stringify(auth));
-		
+		console.log(localStorage);	
 		navigate("/offres/professionnelles");
 		} catch (err) {
 			console.error(err);
@@ -48,6 +47,7 @@ const LoginPage = () => {
 				setError("Erreur de connexion jsp ptdr force");
 			}
 		}
+	 console.log(formData);	   
 	};
 
 	
@@ -55,7 +55,7 @@ const LoginPage = () => {
     //   - Show an error if credentials are invalid
     //   - Show a generic error for all other cases
     // On success, redirect to the Pro Offers page
-    console.log("Login submitted:", formData);
+    
   return (
     <Container className="d-flex justify-content-center align-items-center min-vh-100">
       <Row className="w-100 justify-content-center">
