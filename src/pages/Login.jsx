@@ -38,12 +38,11 @@ const Login = () => {
         };
       }
       
-      const auth = {
+      localStorage.setItem("auth", JSON.stringify({
         token: data.access_token,
-        expiresAt: new Date().getTime() + data.expires_in * 1000,
-      };
+        expiresAt: new Date(Date.now() + data.expires_in * 1000).toISOString()
+      }));
       
-      localStorage.setItem("auth", JSON.stringify(auth));
       navigate("/offres/professionnelles");
     } catch (err) {
       console.error(err);
@@ -99,4 +98,5 @@ const Login = () => {
     </Container>
   );
 };
+
 export default Login;

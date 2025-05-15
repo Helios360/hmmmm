@@ -1,9 +1,22 @@
 import { Nav, Navbar, Container } from "react-bootstrap";
-import { NavLink } from "react-router";
+import { NavLink, useLocation } from "react-router";
 import { useEffect, useState } from "react";
 import "../assets/styles/Header.css";
 
-function Header({ isAuthenticated }) {
+function Header() {
+  const location = useLocation();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  
+  const checkAuth = () => {
+    const auth = JSON.parse(localStorage.getItem("auth"));
+    const isValid = auth && new Date(auth.expiresAt) > new Date();
+    setIsAuthenticated(isValid);
+  };
+  
+  useEffect(() => {
+    checkAuth();
+  }, [location]); // Vérifie à chaque changement d'URL
+
   return (
     <Navbar bg="light">
       <Container>
