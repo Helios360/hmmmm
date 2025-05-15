@@ -1,3 +1,4 @@
+
 import { Nav, Navbar, Container } from "react-bootstrap";
 import { NavLink } from "react-router";
 import "../assets/styles/Header.css";
@@ -9,11 +10,11 @@ function Header({ isAuthenticated }) {
         <Nav className="ms-auto">
           <Nav.Link as={NavLink} to="/">Accueil</Nav.Link>
           <Nav.Link as={NavLink} to="/offres/publiques">Offres Publiques</Nav.Link>
-
+          
           {isAuthenticated && (
             <Nav.Link as={NavLink} to="/offres/professionnelles">Offres Professionnelles</Nav.Link>
           )}
-
+          
           {!isAuthenticated ? (
             <>
               <Nav.Link as={NavLink} to="/inscription">Inscription</Nav.Link>

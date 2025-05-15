@@ -14,6 +14,16 @@ const Layout = () => {
 
   useEffect(() => {
     checkAuth();
+    
+    const handleAuthChange = () => {
+      checkAuth();
+    };
+    
+    window.addEventListener("authChange", handleAuthChange);
+    
+    return () => {
+      window.removeEventListener("authChange", handleAuthChange);
+    };
   }, []);
 
   return (
