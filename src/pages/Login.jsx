@@ -1,14 +1,17 @@
 import { useState } from "react";
-import { Form, Button, Container, Card, Row, Col } from "react-bootstrap";
+import { Form, Button, Container, Card, Row, Col, Alert } from "react-bootstrap";
 import { useNavigate } from "react-router";
+import { useDispatch } from "react-redux";
+import { loginSuccess } from "../store/authSlice";
 
-const LoginPage = () => {	
+const LoginPage = () => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
-	const [error, setError] = useState(null);
-	const navigate = useNavigate();
+  const [error, setError] = useState(null);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleChange = (e) => {
     setFormData({
@@ -20,38 +23,50 @@ const LoginPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-	const response = await fetch("https://offers-api.digistos.com/api/auth/login", {
-		method: "POST",
-		headers:{ "Content-Type":"application/json", "Accept": "application/json",},
-		body:JSON.stringify(formData),
-	});
-	if (!response.ok){
-		throw {
-			status: response.status,
-			message: data.message
-		};
-	}
-	navigate("/offres/professionnelles");
-	} catch (err) {
-		console.error(err);
-		if (err.status ===  401){
-			setError("Identifiants invalides. boowamp");
-		} else {
-			setError("Erreur de connexion jsp ptdr force");
-		}
-	}
-};
-    // Don't forget to handle errors, both for yourself (dev) and for the client (via a Bootstrap Alert):
-    //   - Show an error if credentials are invalid
-    //   - Show a generic error for all other cases
-    // On success, redirect to the Pro Offers page
-    console.log("Login submitted:", formData);
+      const response = await fetch("https://offers-api.digistos.com/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+      
+      const data = await response.json();
+      
+      if (!response.ok) {
+        throw {
+          status: response.status,
+          message: data.message
+        };
+      }
+      
+      // Stocker le token dans Redux après connexion réussie
+      dispatch(
+        loginSuccess({
+          token: data.access_token,
+          expiresAt: new Date(Date.now() + data.expires_in * 1000).toISOString(),
+        })
+      );
+      
+      navigate("/offres/professionnelles");
+    } catch (err) {
+      console.error(err);
+      if (err.status === 401) {
+        setError("Identifiants invalides.");
+      } else {
+        setError("Erreur de connexion au serveur.");
+      }
+    }
+  };
+
   return (
     <Container className="d-flex justify-content-center align-items-center min-vh-100">
       <Row className="w-100 justify-content-center">
         <Col xs={12} sm={8} md={6} lg={4}>
           <Card className="p-4 shadow-lg">
             <h2 className="text-center mb-4">Se connecter</h2>
+            {error && <Alert variant="danger">{error}</Alert>}
             <Form onSubmit={handleSubmit}>
               <Form.Group className="mb-3" controlId="loginEmail">
                 <Form.Label>Email</Form.Label>

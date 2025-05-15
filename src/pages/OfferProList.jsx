@@ -1,11 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { Spinner, Alert } from "react-bootstrap";
 import OfferList from "../components/OfferList.jsx";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router";
 
 const OfferProList = () => {
   const [offers, setOffers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const token = useSelector((state) => state.auth.token);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -15,12 +19,12 @@ const OfferProList = () => {
           {
             headers: {
               Accept: "application/json",
-              // Add Authorization token
+              Authorization: `Bearer ${token}` // Ajout du token d'autorisation
             },
           }
         );
 
-        const {data: offers,message} = await response.json();
+        const { data: offers, message } = await response.json();
         if (!response.ok) {
           throw { status: response.status, message: message };
         }
@@ -29,6 +33,8 @@ const OfferProList = () => {
       } catch (err) {
         if (err.status === 401) {
           setError("Vous n'êtes pas autorisé à accéder aux offres (401).");
+          // Rediriger vers la page de connexion en cas d'erreur d'autorisation
+          setTimeout(() => navigate("/connexion"), 2000);
         } else {
           setError("Une erreur est survenue lors du chargement des offres.");
         }
@@ -39,7 +45,7 @@ const OfferProList = () => {
     };
 
     fetchProducts();
-  }, []);
+  }, [token, navigate]);
 
   if (loading) {
     return <Spinner animation="border" className="d-block mx-auto mt-5" />;

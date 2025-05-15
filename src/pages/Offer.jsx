@@ -1,27 +1,32 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router";
+import { useParams, useNavigate } from "react-router";
 import { Container, Card, Spinner, Alert } from "react-bootstrap";
+import { useSelector } from "react-redux";
 
 const Offer = () => {
   const { id } = useParams();
   const [offer, setOffer] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const token = useSelector((state) => state.auth.token);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchOffer = async () => {
       try {
+        const headers = {
+          Accept: "application/json",
+        };
+        if (token) {
+          headers.Authorization = `Bearer ${token}`;
+        }
+
         const response = await fetch(
           `https://offers-api.digistos.com/api/offers/${id}`,
-          {
-            headers: {
-              Accept: "application/json",
-              // Add Authorization token
-            },
-          }
+          { headers }
         );
 
-        const {data:offers,message} = await response.json();
+        const { data: offers, message } = await response.json();
         if (!response.ok) {
           throw { status: response.status, message: message };
         }
@@ -30,6 +35,7 @@ const Offer = () => {
       } catch (err) {
         if (err.status === 401) {
           setError("Accès non autorisé (401).");
+          setTimeout(() => navigate("/connexion"), 2000);
         } else {
           setError("Erreur lors du chargement de l'offre.");
         }
@@ -40,7 +46,7 @@ const Offer = () => {
     };
 
     fetchOffer();
-  }, [id]);
+  }, [id, token, navigate]);
 
   if (loading)
     return <Spinner animation="border" className="d-block mx-auto mt-5" />;
