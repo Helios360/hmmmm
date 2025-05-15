@@ -38,8 +38,7 @@ const LoginPage = () => {
 	}
 	localStorage.setItem("auth", JSON.stringify(auth));
 	checkAuth();
-    	console.log(localStorage);
-        window.dispatchEvent(new Event("authChange"));
+  console.log(localStorage);
 	navigate("/offres/professionnelles");
 	} catch (err) {
 		console.error(err);
