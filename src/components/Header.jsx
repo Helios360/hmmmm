@@ -1,9 +1,24 @@
-
 import { Nav, Navbar, Container } from "react-bootstrap";
 import { NavLink } from "react-router";
+import { useState, useEffect } from "react";
 import "../assets/styles/Header.css";
 
-function Header({ isAuthenticated }) {
+function Header() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const checkAuth = () => {
+    const auth = JSON.parse(localStorage.getItem("auth") || "{}");
+    const isValid = !!auth?.token && new Date(auth.expiresAt) > new Date();
+    setIsAuthenticated(isValid);
+  };
+  
+  useEffect(() => {
+    checkAuth();
+    const interval = setInterval(checkAuth, 1000);
+    return () => {
+      clearInterval(interval);
+    };
+  }, []);
+
   return (
     <Navbar bg="light">
       <Container>
