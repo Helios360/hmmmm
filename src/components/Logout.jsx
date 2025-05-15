@@ -26,7 +26,6 @@ const Logout = () => {
         }
         
         localStorage.removeItem("auth");
-        window.dispatchEvent(new Event("authChange"));
         navigate("/connexion");
       } catch (err) {
         console.error(err);
