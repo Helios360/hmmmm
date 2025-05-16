@@ -27,7 +27,7 @@ const Login = () => {
           "Accept": "application/json"
         },
         body: JSON.stringify(formData),
-        credentials: "include",
+        credentials: "include"
       });
       
       const data = await response.json();
@@ -40,7 +40,6 @@ const Login = () => {
       }
       
       localStorage.setItem("auth", JSON.stringify({
-        token: data.access_token,
         expiresAt: new Date(Date.now() + data.expires_in * 1000).toISOString()
       }));
       

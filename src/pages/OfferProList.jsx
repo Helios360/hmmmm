@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useLocation } from "react";
 import { Spinner, Alert } from "react-bootstrap";
 import OfferList from "../components/OfferList.jsx";
 
@@ -10,18 +10,13 @@ const OfferProList = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-	//console.log(localStorage.getItem(bonjour));
-  	const auth = JSON.parse(localStorage.getItem("auth"));
-	if (!auth || !auth.token) {
-          throw new Error("Token non trouvé");
-        }
-	const response = await fetch(
+          const response = await fetch(
           "https://offers-api.digistos.com/api/offers/pro",
           {
             headers: {
               Accept: "application/json",
-      	      Authorization: `Bearer ${auth.token}`
             },
+            credentials: "include"
           }
         );
 
@@ -37,7 +32,6 @@ const OfferProList = () => {
         } else {
           setError("Une erreur est survenue lors du chargement des offres.");
         }
-        console.error(err.message || err);
       } finally {
         setLoading(false);
       }

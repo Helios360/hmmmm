@@ -7,17 +7,10 @@ const Logout = () => {
   useEffect(() => {
     const handleLogout = async () => {
       try {
-        const auth = JSON.parse(localStorage.getItem("auth"));
-        if (!auth || !auth.token) {
-          throw new Error("Token non trouvé");
-        }
         
         const response = await fetch("https://offers-api.digistos.com/api/auth/logout", {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${auth.token}`
-          },
+          credentials:"include",
         });
         
         if (!response.ok) {
