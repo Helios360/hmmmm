@@ -21,6 +21,7 @@ const Offer = () => {
             headers: {
               Accept: "application/json",
             },
+            credentials:"include",
           }
         );
 
